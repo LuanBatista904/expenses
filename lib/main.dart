@@ -9,7 +9,28 @@ main() => runApp(ExpensesApp());
 class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: MyhomePage());
+    return MaterialApp(home: MyhomePage(),
+    theme: ThemeData(
+      primarySwatch: Colors.purple,
+      accentColor: Colors.amber,
+      fontFamily: 'Quicksand',
+      textTheme: ThemeData.light().textTheme.copyWith(
+        headline6: TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+      ),
+      ),
+      appBarTheme: AppBarTheme(
+        textTheme: ThemeData.light().textTheme.copyWith(
+          headline6: TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          )
+        )
+      )
+    ));
   }
 }
 
@@ -20,19 +41,19 @@ class MyhomePage extends StatefulWidget {
 }
 
 class _MyhomePageState extends State<MyhomePage> {
-  final _transactions = [
-    Transaction(
-      id: 't1',
-      title: 'Novo Tênis de Corrida',
-      value: 310.76,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Conta de Luz',
-      value: 211.30,
-      date: DateTime.now(),
-    )
+  final List<Transaction> _transactions = [
+    // Transaction(
+    //   id: 't1',
+    //   title: 'Novo Tênis de Corrida',
+    //   value: 310.76,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Conta de Luz',
+    //   value: 211.30,
+    //   date: DateTime.now(),
+    // )
   ];
 
   _addTransaction(String title, double value) {
@@ -60,7 +81,9 @@ class _MyhomePageState extends State<MyhomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Despesas Pessoais'),
+        title: Text('Despesas Pessoais',
+        
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
