@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
-  final void Function(String, double) onSubmit;
+  final void Function(String, double, DateTime) onSubmit;
 
   TransactionForm(this.onSubmit);
 
@@ -14,14 +15,33 @@ class _TransactionFormState extends State<TransactionForm> {
 
   final valueController = TextEditingController();
 
+ DateTime _selectedDate = DateTime.now();
+
   _submitForm() {
     final title = titleController.text;
     final value = double.tryParse(valueController.text) ?? 0.0;
-    widget.onSubmit(title, value);
+    widget.onSubmit(title, value, _selectedDate);
 
-    if (title.isEmpty || value <= 0) {
+    // ignore: unnecessary_null_comparison
+    if (title.isEmpty || value <= 0 || _selectedDate == null) {
       return;
     }
+  }
+
+  _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2019),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -47,16 +67,36 @@ class _TransactionFormState extends State<TransactionForm> {
                 labelText: 'Valor (R\$)',
               ),
             ),
+            Container(
+              height: 70,
+              child: Row(
+                children: [
+                  // ignore: unnecessary_null_comparison
+                  Expanded(child: Text(_selectedDate == null ? 'Nenhuma data selecionada!': 'Data Selecionada: ${DateFormat('d/M/y').format(_selectedDate)}')),
+                  TextButton(
+                    child: Text(
+                      'Selecionar Data',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: _showDatePicker,
+                  )
+                ],
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
-                  child: Text(
-                    'Nova Transação',
-                    style: TextStyle(color: Colors.purple),
-                  ),
-                  onPressed:_submitForm
-                ),
+                ElevatedButton(
+                    child: Text(
+                      'Nova Transação',
+                      style: TextStyle(
+                          color: Colors.white,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: _submitForm),
               ],
             )
           ],
